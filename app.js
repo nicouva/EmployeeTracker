@@ -8,7 +8,7 @@ const companyMenu = () => {
   inquirer.prompt([
     {
       type: 'list',
-      name: 'directory',
+      name: 'option',
       message: 'What would you like to do?',
       choices: ['View Company Directory', 'Add to Company Directory', 'EXIT']
     }
@@ -33,7 +33,7 @@ const viewCompany = () => {
   inquirer.prompt([
     {
       type: 'list',
-      name: 'view',
+      name: 'option',
       message: 'What would you like to view?',
       choices: ['View Departments', 'View Roles', 'View Employees', 'Return to Company Menu']
     }
@@ -96,7 +96,7 @@ const addCompany = () => {
   inquirer.prompt([
     {
       type: 'list',
-      name: 'add',
+      name: 'option',
       message: 'Which of the following would you like to add?',
       choices: ['Add Department', 'Add Role', 'Add Employee', 'Return to Company Menu']
     }
