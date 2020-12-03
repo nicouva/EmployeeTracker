@@ -201,4 +201,5 @@ const addEmployee = () => {
     .catch(err => console.log(err))
 }
 
+
 companyMenu()
