@@ -81,7 +81,7 @@ const viewRoles = () => {
 const viewEmployees = () => {
   db.query(`
   SELECT employees.id, employees.firstName, employees.lastName, roles.title, roles.salary, departments.name AS department, CONCAT(manager.firstName, '', manager.lastName) AS manager
-  FROM employees LEFT JOIN on employees.roleId = roles.id
+  FROM employees LEFT JOIN role ON employees.roleId = roles.id
   LEFT JOIN departments ON roles.departmentId = departments.id
   LEFT JOIN employees manager on manager.id = employees.managerId
 `, (err, employees) => {
