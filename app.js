@@ -1,4 +1,5 @@
 const inquirer = require('inquirer')
+const { syncBuiltinESMExports } = require('module')
 const mysql = require('mysql2')
 require('console.table')
 
@@ -10,7 +11,7 @@ const companyMenu = () => {
       type: 'list',
       name: 'option',
       message: 'What would you like to do?',
-      choices: ['View Company Directory', 'Add to Company Directory', 'EXIT']
+      choices: ['View Company Directory', 'Add to Company Directory', 'Update Employee Directory', 'Delete from Employee Directory', 'EXIT']
     }
   ])
     .then(({ option }) => {
@@ -20,6 +21,12 @@ const companyMenu = () => {
           break
         case 'Add to Company Directory':
           addCompany()
+          break
+        case 'Update Company Directory':
+          updateEmployee()
+          break
+        case 'Delete from Employee Directory':
+          deleteEmployee()
           break
         case 'EXIT':
           process.exit()
@@ -199,6 +206,70 @@ const addEmployee = () => {
       })
     })
     .catch(err => console.log(err))
+}
+
+const updateEmployee = () => {
+  db.query('SELECT * FROM employees', (err, employees) => {
+    if (err) { console.log(err) }
+    db.query('SELECT * FROM roles', (err, roles) => {
+      if (err) { console.log(err) }
+
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'id',
+          message: 'Select the employee you wish to update.'
+          choices: employees.map(employee => ({
+            name: `${employee.firstName} ${employee.lastName}`,
+            value: employee.id
+          }))
+        },
+        {
+          type: 'list',
+          name: 'roleId',
+          message: 'What is the updated role of the selected employee?'
+          choices: roles.map(role => ({
+            name: `${roles.title}`,
+            value: role.id
+          }))
+        }
+      ])
+        .then(data => {
+          db.query('UPDATE employees SET ? WHERE ?', [{ roleId: data.roleId }, { id: data.id }], err => {
+            if (err) { console.log(err) }
+            console.log('Employee Role Updated!')
+            companyMenu()
+          })
+        })
+        .catch(err => console.log(err))
+    })
+  })
+}
+
+const deleteEmployee = () => {
+  db.query('SELECT * FROM employees', (err, employees) => {
+    if (err) { console.log(err) }
+
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'id',
+        message: 'Select the employee you wish to delete.'
+        choices: employees.map(employee => ({
+          name: `${employee.firstName} ${employee.lastName}`,
+          value: employee.id
+        }))
+      }
+    ])
+      .then(data => {
+        db.query('DELETE FROM employee WHERE ?', { employee.id }, err => {
+          if (err) { console.log(err) }
+          console.log('Employee Deleted!')
+          companyMenu()
+        })
+      })
+      .catch(err => console.log(err))
+  })
 }
 
 
