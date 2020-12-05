@@ -81,7 +81,7 @@ const viewRoles = () => {
 const viewEmployees = () => {
   db.query(`
   SELECT employees.id, employees.firstName, employees.lastName, roles.title, roles.salary, departments.name AS department, CONCAT(manager.firstName, '', manager.lastName) AS manager
-  FROM employees LEFT JOIN role ON employees.roleId = roles.id
+  FROM employees LEFT JOIN roles ON employees.roleId = roles.id
   LEFT JOIN departments ON roles.departmentId = departments.id
   LEFT JOIN employees manager on manager.id = employees.managerId
 `, (err, employees) => {
@@ -156,7 +156,7 @@ const addRole = () => {
     }
   ])
     .then(role => {
-      db.query(`INSERT INTO role SET ?`, role, err => {
+      db.query(`INSERT INTO roles SET ?`, role, err => {
         if (err) { console.log(err) }
         console.log('New Role Added!')
         companyMenu()
